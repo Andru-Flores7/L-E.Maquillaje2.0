@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import "./CartOffcanvas.css";
 
 const CartOffcanvas = ({ show, handleClose }) => {
   const { cart, removeFromCart, clearCart, cartTotal, updateQuantity } =

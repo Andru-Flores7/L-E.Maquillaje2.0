@@ -1,0 +1,14 @@
+/* Tips Page Styles */
+.tips-container {
+  gap: 2rem;
+}
+.tip-card {
+  border-left: none;
+  border-top: 4px solid var(--primary-color);
+  box-shadow: var(--shadow-3d);
+}
+.tip-title {
+  color: var(--primary-color);
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+}

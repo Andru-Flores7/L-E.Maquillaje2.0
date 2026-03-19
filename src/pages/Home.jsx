@@ -1,5 +1,6 @@
 import React, { useContext, useState, useMemo, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
+import "./Home.css";
 
 const categories = [
   "Todos",
@@ -30,8 +31,12 @@ const Home = () => {
       return matchesCategory && matchesSearch;
     });
 
-    // Ordenar de la A a la Z
-    return filtered.sort((a, b) => a.name.localeCompare(b.name));
+    // Ordenar por destacado primero, luego alfabéticamente
+    return filtered.sort((a, b) => {
+      if (a.destacado && !b.destacado) return -1;
+      if (!a.destacado && b.destacado) return 1;
+      return a.name.localeCompare(b.name);
+    });
   }, [products, selectedCategory, searchTerm]);
 
   // Pagination logic
@@ -80,11 +85,19 @@ const Home = () => {
                 <p className="product-price">
                   ${Number(product.price).toFixed(2)}
                 </p>
+                <div className="product-stock-container">
+                  {product.stock > 0 ? (
+                    <span className="stock-available">Stock: {product.stock} unidades</span>
+                  ) : (
+                    <span className="stock-out">Sin Stock</span>
+                  )}
+                </div>
                 <button
                   className="add-to-cart-btn"
                   onClick={() => addToCart(product)}
+                  disabled={product.stock <= 0}
                 >
-                  Añadir al Carrito
+                  {product.stock > 0 ? "Añadir al Carrito" : "Agotado"}
                 </button>
               </div>
             </div>

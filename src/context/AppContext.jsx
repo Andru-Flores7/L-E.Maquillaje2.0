@@ -33,6 +33,7 @@ export const AppProvider = ({ children }) => {
               price: p.precio,
               image_url: p.imagen,
               stock: p.stock,
+              destacado: p.destacado || false,
             }));
             setProducts(mappedProducts);
           }
@@ -83,6 +84,7 @@ export const AppProvider = ({ children }) => {
             precio: product.price,
             imagen: product.image_url,
             stock: product.stock || 0,
+            destacado: product.destacado || false,
           },
         ])
         .select();
@@ -97,6 +99,7 @@ export const AppProvider = ({ children }) => {
         price: data[0].precio,
         image_url: data[0].imagen,
         stock: data[0].stock,
+        destacado: data[0].destacado,
       };
       setProducts((prev) => [...prev, newProduct]);
       return { success: true };
@@ -130,6 +133,7 @@ export const AppProvider = ({ children }) => {
           precio: updatedData.price,
           imagen: updatedData.image_url,
           stock: updatedData.stock,
+          destacado: updatedData.destacado,
         })
         .eq("id", id)
         .select();
@@ -147,6 +151,7 @@ export const AppProvider = ({ children }) => {
                 price: data[0].precio,
                 image_url: data[0].imagen,
                 stock: data[0].stock,
+                destacado: data[0].destacado,
               }
             : p,
         ),

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AppContext } from "../context/AppContext";
+import "./AdminPanel.css";
 
 const AdminPanel = ({ onLogout }) => {
   const {
@@ -31,10 +32,15 @@ const AdminPanel = ({ onLogout }) => {
     price: "",
     image_url: "",
     stock: "",
+    destacado: false,
   });
 
   const handleAdInputChange = (e) => {
-    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setNewProduct({
+      ...newProduct,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleAddProduct = async (e) => {
@@ -48,6 +54,7 @@ const AdminPanel = ({ onLogout }) => {
         price: "",
         image_url: "",
         stock: "",
+        destacado: false,
       });
     } else {
       setStatus({
@@ -65,6 +72,7 @@ const AdminPanel = ({ onLogout }) => {
       price: product.price,
       image_url: product.image_url,
       stock: product.stock,
+      destacado: product.destacado || false,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -84,6 +92,7 @@ const AdminPanel = ({ onLogout }) => {
         price: "",
         image_url: "",
         stock: "",
+        destacado: false,
       });
     } else {
       setStatus({
@@ -173,7 +182,11 @@ const AdminPanel = ({ onLogout }) => {
   const filteredProducts = products.filter((p) =>
     (p.name || "").toLowerCase().includes(productSearchTerm.toLowerCase()) ||
     (p.id || "").toString().includes(productSearchTerm)
-  );
+  ).sort((a, b) => {
+    if (a.destacado && !b.destacado) return -1;
+    if (!a.destacado && b.destacado) return 1;
+    return (a.name || "").localeCompare(b.name || "");
+  });
 
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -442,6 +455,21 @@ const AdminPanel = ({ onLogout }) => {
                         placeholder="https://ejemplo.com/imagen.jpg"
                       />
                     </div>
+
+                    <div className="form-check form-switch mt-2">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="destacadoCheck"
+                        name="destacado"
+                        checked={newProduct.destacado}
+                        onChange={handleAdInputChange}
+                        style={{ cursor: "pointer", width: "3em", height: "1.5em", marginRight: "10px" }}
+                      />
+                      <label className="form-check-label" htmlFor="destacadoCheck" style={{ fontWeight: 600, color: "#555", cursor: "pointer", fontSize: "1.1rem" }}>
+                        ✨ Producto Destacado (Aparecerá primero en el catálogo)
+                      </label>
+                    </div>
                   </div>
 
                   <div className="d-flex justify-content-end gap-3 mt-4">
@@ -520,6 +548,7 @@ const AdminPanel = ({ onLogout }) => {
                       <th>Categoría</th>
                       <th>Precio</th>
                       <th>Stock</th>
+                      <th>Estado</th>
                       <th className="text-center">Acciones</th>
                     </tr>
                   </thead>
@@ -540,6 +569,17 @@ const AdminPanel = ({ onLogout }) => {
                           </td>
                           <td>${Number(p.price).toLocaleString("es-AR")}</td>
                           <td>{p.stock}</td>
+                          <td>
+                            {p.destacado ? (
+                              <span className="badge bg-warning text-dark">
+                                ✨ Destacado
+                              </span>
+                            ) : (
+                              <span className="badge bg-light text-muted border">
+                                Estándar
+                              </span>
+                            )}
+                          </td>
                           <td className="text-center">
                             <button
                               className="btn-action-edit me-2"

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import { AppContext } from "../context/AppContext";
 import CartOffcanvas from "./CartOffcanvas";
+import "./Navbar.css";
 
 const AppNavbar = () => {
   const [showCart, setShowCart] = useState(false);
